@@ -16,13 +16,13 @@
 
 .DEFAULT_GOAL := docker-image
 
-IMAGE ?= rewanthtammana/admission-controller-webhook-demo:latest
+IMAGE ?= rewanthtammana/admission-controller-webhook-demo:1.23.make
 
-image/webhook-server: $(shell find . -name '*.go')
-	CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -o $@ ./cmd/webhook-server
+bin/webhook-server: $(shell find . -name '*.go')
+	cd ./cmd/webhook-server && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o $@ . && cp ./bin/webhook-server ../../image && rm -r ./bin/
 
 .PHONY: docker-image
-docker-image: image/webhook-server
+docker-image: bin/webhook-server
 	docker build -t $(IMAGE) image/
 
 .PHONY: push-image

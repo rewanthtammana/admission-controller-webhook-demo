@@ -21,12 +21,13 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
+	"log"
+	"net/http"
+
 	"k8s.io/api/admission/v1beta1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/serializer"
-	"log"
-	"net/http"
 )
 
 const (
@@ -93,6 +94,10 @@ func doServeAdmitFunc(w http.ResponseWriter, r *http.Request, admit admitFunc) (
 		Response: &v1beta1.AdmissionResponse{
 			UID: admissionReviewReq.Request.UID,
 		},
+		TypeMeta: metav1.TypeMeta{
+			APIVersion: "admission.k8s.io/v1",
+			Kind:       "AdmissionReview",
+		},
 	}
 
 	var patchOps []patchOperation
@@ -116,8 +121,10 @@ func doServeAdmitFunc(w http.ResponseWriter, r *http.Request, admit admitFunc) (
 			w.WriteHeader(http.StatusInternalServerError)
 			return nil, fmt.Errorf("could not marshal JSON patch: %v", err)
 		}
+		var PatchTypeJSONPatch v1beta1.PatchType = "JSONPatch"
 		admissionReviewResponse.Response.Allowed = true
 		admissionReviewResponse.Response.Patch = patchBytes
+		admissionReviewResponse.Response.PatchType = &PatchTypeJSONPatch
 	}
 
 	// Return the AdmissionReview with a response as JSON.
