@@ -20,7 +20,7 @@ spec:
         runAsUser: 1234
       containers:
       - name: server
-        image: rewanthtammana/admission-controller-webhook-demo:1.23.make
+        image: rewanthtammana/admission-controller-webhook-demo:1.23.make.v1api
         imagePullPolicy: Always
         ports:
         - containerPort: 8443
