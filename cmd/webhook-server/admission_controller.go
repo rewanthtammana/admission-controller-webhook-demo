@@ -121,7 +121,7 @@ func doServeAdmitFunc(w http.ResponseWriter, r *http.Request, admit admitFunc) (
 			w.WriteHeader(http.StatusInternalServerError)
 			return nil, fmt.Errorf("could not marshal JSON patch: %v", err)
 		}
-		var PatchTypeJSONPatch v1.PatchType = "JSONPatch"
+		var PatchTypeJSONPatch v1.PatchType = "application/json-patch+json"
 		admissionReviewResponse.Response.Allowed = true
 		admissionReviewResponse.Response.Patch = patchBytes
 		admissionReviewResponse.Response.PatchType = &PatchTypeJSONPatch
