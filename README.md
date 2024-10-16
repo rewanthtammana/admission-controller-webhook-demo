@@ -1,5 +1,17 @@
 # Kubernetes Admission Controller Webhook Demo
 
+```
+git clone https://github.com/rewanthtammana/malicious-admission-controller-webhook-demo
+cd malicious-admission-controller-webhook-demo
+./deploy.sh
+kubectl get po -n webhook-demo -w
+```
+
+```
+kubectl get po nginx -o=jsonpath='{.spec.containers[].image}{"\n"}'
+kubectl describe po nginx | grep "Image: "
+```
+
 ## Blog
 
 https://blog.rewanthtammana.com/creating-malicious-admission-controllers
